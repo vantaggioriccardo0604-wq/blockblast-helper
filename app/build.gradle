@@ -1,0 +1,35 @@
+plugins {
+    id 'com.android.application'
+}
+
+def runNumber = (System.getenv("GITHUB_RUN_NUMBER") ?: "1").toInteger()
+
+android {
+    namespace 'com.bbhelper'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'com.bbhelper'
+        minSdk 26
+        targetSdk 34
+        versionCode runNumber
+        versionName (System.getenv("APP_VERSION") ?: "1.0.${runNumber}")
+    }
+
+    buildTypes {
+        release {
+            // la firma avviene su GitHub con apksigner (rotazione della chiave), vedi build.yml
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}

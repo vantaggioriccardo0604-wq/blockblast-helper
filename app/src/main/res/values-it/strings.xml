@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BB Helper</string>
+    <string name="a11y_label">BB Helper (modalità automatica)</string>
+    <string name="a11y_desc">Modalità automatica di BB Helper: mentre giochi a Block Blast guarda lo schermo e disegna dove mettere i pezzi, senza chiedere il permesso a ogni avvio. Le immagini vengono analizzate sul momento e mai salvate, e nessun dato esce dal telefono. Si mostra solo dentro il gioco. Progetto non ufficiale, non affiliato con gli sviluppatori di Block Blast.</string>
+    <string name="dashboard">Dashboard</string>
+</resources>

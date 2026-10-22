@@ -1,0 +1,97 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Test automatici (riconoscimento, mosse, partite simulate)
+        run: |
+          mkdir -p build/tests
+          javac -encoding UTF-8 -d build/tests app/src/main/java/com/bbhelper/{Analyzer,Solver,Tracker,Diag,DashData,I18n}.java tests/src/com/bbhelper/RunTests.java
+          java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -cp build/tests com.bbhelper.RunTests tests
+
+      - name: Pulizia delle versioni precedenti alla pubblicazione (una volta sola)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # le versioni create prima della storia pubblica puntano a commit che non esistono piu'
+          gh release list --repo "${{ github.repository }}" --limit 1000 --json tagName,createdAt \
+            --jq '.[] | select(.createdAt < "2026-10-22T18:28:30Z") | .tagName' |
+          while read -r tag; do
+            echo "elimino $tag"
+            gh release delete "$tag" --repo "${{ github.repository }}" --cleanup-tag --yes || true
+          done
+
+      - name: Numero di versione (in sequenza, senza salti)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          n=$(gh release list --repo "${{ github.repository }}" --limit 1000 | wc -l)
+          echo "APP_VERSION=1.1.$n" >> "$GITHUB_ENV"
+
+      - name: Compila l'APK
+        run: |
+          set -o pipefail
+          if ! gradle assembleRelease --no-daemon 2>&1 | tee build.log; then
+            msg=$(grep -E "error:|warning: \[|\.java:[0-9]+|What went wrong|Execution failed|AAPT|ERROR" -A3 build.log | head -60 | sed ':a;N;$!ba;s/%/%25/g;s/\r//g;s/\n/%0A/g')
+            echo "::error title=Errore di compilazione::$msg"
+            exit 1
+          fi
+
+      - name: Firma l'APK (chiave nuova con rotazione dalla vecchia)
+        env:
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        run: |
+          if [ -z "$SIGNING_PASSWORD" ]; then
+            echo "::error title=Manca il segreto SIGNING_PASSWORD::Aggiungilo in Settings > Secrets and variables > Actions"
+            exit 1
+          fi
+          mkdir -p "$RUNNER_TEMP/keys"
+          openssl enc -d -aes-256-cbc -pbkdf2 -iter 300000 -in keystore/keys.tar.enc -pass env:SIGNING_PASSWORD \
+            | tar -C "$RUNNER_TEMP/keys" -xf -
+          set -a; . "$RUNNER_TEMP/keys/passwords.env"; set +a
+          BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          K="$RUNNER_TEMP/keys"
+          "$BT/apksigner" rotate --out "$K/lineage" \
+            --old-signer --ks "$K/old.jks" --ks-key-alias "$OLD_ALIAS" --ks-pass env:OLD_PASS --key-pass env:OLD_PASS --set-rollback false \
+            --new-signer --ks "$K/new.jks" --ks-key-alias "$NEW_ALIAS" --ks-pass env:NEW_PASS --key-pass env:NEW_PASS
+          "$BT/apksigner" sign --out BlockBlastHelper.apk --rotation-min-sdk-version 28 --lineage "$K/lineage" \
+            --ks "$K/old.jks" --ks-key-alias "$OLD_ALIAS" --ks-pass env:OLD_PASS --key-pass env:OLD_PASS \
+            --next-signer --ks "$K/new.jks" --ks-key-alias "$NEW_ALIAS" --ks-pass env:NEW_PASS --key-pass env:NEW_PASS \
+            app/build/outputs/apk/release/app-release-unsigned.apk
+          "$BT/apksigner" verify --verbose --print-certs BlockBlastHelper.apk | grep -E "Verified using|Signer|certificate SHA-256" | head -12
+          rm -rf "$K"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BlockBlastHelper
+          path: BlockBlastHelper.apk
+
+      - name: Pubblica in Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          { echo "📲 Download **BlockBlastHelper.apk** below and open it on your phone · Scarica **BlockBlastHelper.apk** qui sotto e aprilo sul telefono."; echo; cat test_summary.md; } > notes.md
+          gh release create "r${{ github.run_number }}" BlockBlastHelper.apk \
+            --title "BB Helper ${APP_VERSION}" \
+            --notes-file notes.md \
+            --latest
