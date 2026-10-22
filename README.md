@@ -1,7 +1,16 @@
-# BB Helper
+<p align="center"><img src="docs/icon.png" width="96" alt="BB Helper icon"></p>
 
-**An Android helper for Block Blast: it shows you where to place the pieces, right on top of the game.**
-*Un aiuto per Block Blast su Android: ti mostra dove mettere i pezzi, direttamente sopra il gioco.* — [🇮🇹 Italiano più sotto](#-italiano)
+<h1 align="center">BB Helper</h1>
+
+<p align="center"><b>An Android helper for Block Blast: it shows you where to place the pieces, right on top of the game.</b><br>
+<i>Un aiuto per Block Blast su Android: ti mostra dove mettere i pezzi, direttamente sopra il gioco.</i> — <a href="#-italiano">🇮🇹 Italiano</a></p>
+
+<p align="center">
+  <a href="../../releases/latest"><img src="https://img.shields.io/github/v/release/vantaggioriccardo0604-wq/blockblast-helper?label=download&style=for-the-badge" alt="Latest release"></a>
+  <a href="http://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/https://github.com/vantaggioriccardo0604-wq/blockblast-helper"><img src="https://img.shields.io/badge/Obtainium-auto--updates-7c4dff?style=for-the-badge" alt="Get it on Obtainium"></a>
+  <img src="https://img.shields.io/badge/Android-8.0%2B-3ddc84?style=for-the-badge&logo=android&logoColor=white" alt="Android 8.0+">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=for-the-badge" alt="MIT"></a>
+</p>
 
 <p align="center"><img src="docs/demo.gif" width="300" alt="BB Helper suggesting a move in Block Blast"></p>
 
@@ -17,14 +26,24 @@
 - **Automatic mode** — turn it on once in Accessibility settings: the helper appears by itself only inside the game, with no screen-recording prompt every time.
 - **Dashboard** — your stats and charts inside the app: most frequent pieces, lines per move and per game, survival over time, and *"does the game help you?"*.
 - **Works with every theme** — grey, purple, light blue… it recognizes empty and filled cells by their shape, not their color.
-- **In-app updates**, Italian and English, diagnostics with one-tap bug reports.
+- **In-app updates**, English and Italian (follows your phone, or pick it in Settings), diagnostics with one-tap bug reports.
+
+<p align="center"><img src="docs/screens.png" width="560" alt="Screenshots: next move hint and survival meter"></p>
 
 ## 📲 Install
 
+**Option A — direct download**
 1. Open the [**latest release**](../../releases/latest) on your phone and download `BlockBlastHelper.apk`.
 2. Open the file. Android will ask you to allow installs from your browser / file manager: allow it.
    If **Play Protect** shows a warning, tap *"Scan app"* or *"Install anyway"* — it appears for every app that doesn't come from the Play Store.
 3. Open **BB Helper** and follow the 3 welcome screens.
+
+**Option B — automatic updates with [Obtainium](https://github.com/ImranR98/Obtainium)**
+Obtainium installs apps straight from GitHub releases and keeps them updated.
+1. Install Obtainium.
+2. On your phone, tap [**Add BB Helper to Obtainium**](http://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/https://github.com/vantaggioriccardo0604-wq/blockblast-helper) — or in Obtainium tap *Add App* and paste
+   `https://github.com/vantaggioriccardo0604-wq/blockblast-helper`
+3. Tap *Add*, then *Install*. Obtainium will notify you when a new version is out.
 
 Requires **Android 8.0+** (automatic mode needs **Android 11+**).
 
@@ -82,9 +101,11 @@ In the app: **Updates and problems → "Report a problem on GitHub"** opens a pr
 - Modalità *sopravvivenza* o *punteggio* ★ (doppio tocco sulla bolla).
 - Modalità automatica: si attiva una volta sola e l'aiuto compare da solo dentro il gioco.
 - Dashboard con statistiche e grafici, funziona con tutti i temi, aggiornamenti dentro l'app.
+- In italiano o in inglese: segue la lingua del telefono, oppure la scegli nelle Impostazioni.
 
 **Installazione**
-1. Apri l'[**ultima versione**](../../releases/latest) dal telefono e scarica `BlockBlastHelper.apk`.
+1. Apri l'[**ultima versione**](../../releases/latest) dal telefono e scarica `BlockBlastHelper.apk`
+   (oppure usa [**Obtainium**](http://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/https://github.com/vantaggioriccardo0604-wq/blockblast-helper) per ricevere gli aggiornamenti in automatico).
 2. Aprilo e consenti l'installazione. Se compare **Play Protect**, tocca *"Analizza l'app"* o *"Installa comunque"*: succede con ogni app che non viene dal Play Store.
 3. Apri **BB Helper** e segui le 3 schermate iniziali.
 

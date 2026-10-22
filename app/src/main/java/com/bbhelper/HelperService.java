@@ -68,6 +68,7 @@ public class HelperService extends Service implements Engine.Host {
         }
         if (projection != null) return START_NOT_STICKY; // gia' attivo
 
+        Lang.load(this);
         startInForeground();
 
         int code = intent.getIntExtra(EXTRA_CODE, 0);

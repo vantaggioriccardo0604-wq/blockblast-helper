@@ -63,6 +63,7 @@ public class OnboardingActivity extends Activity {
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
+        Lang.load(this);
         d = getResources().getDisplayMetrics().density;
         getWindow().setStatusBarColor(MainActivity.BG);
         render();

@@ -44,6 +44,7 @@ public class A11yService extends AccessibilityService implements Engine.Host {
             return;
         }
         instance = this;
+        Lang.load(this);
         prefs = getSharedPreferences(HelperService.PREFS, MODE_PRIVATE);
         prefs.registerOnSharedPreferenceChangeListener(listener);
         WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);

@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -35,17 +36,20 @@ public class MainActivity extends Activity {
     static final int GREEN = Color.rgb(0, 200, 110);
     static final int GREY = Color.rgb(60, 60, 75);
     static final int BLUE = Color.rgb(60, 90, 160);
+    static final int CARD = Color.rgb(28, 30, 44);
 
     private Button startBtn;
     private TextView status, statsView, autoInfo, diagView, updateStatus;
     private SharedPreferences prefs;
-    private LinearLayout col;
+    private LinearLayout col;   // contenitore in cui si aggiungono gli elementi (pagina o scheda)
+    private LinearLayout root;  // la pagina
     private float d;
 
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         prefs = getSharedPreferences(HelperService.PREFS, MODE_PRIVATE);
+        Lang.load(this);
         if (!prefs.getBoolean(P_ONBOARDED, false)) {
             startActivity(new Intent(this, OnboardingActivity.class));
         }
@@ -57,8 +61,18 @@ public class MainActivity extends Activity {
         col.setPadding(pad, dp(48), pad, pad);
         col.setBackgroundColor(BG);
 
+        root = col;
+        // intestazione: icona + nome
+        LinearLayout head = new LinearLayout(this);
+        head.setOrientation(LinearLayout.HORIZONTAL);
+        head.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        android.widget.ImageView icon = new android.widget.ImageView(this);
+        icon.setImageResource(R.mipmap.ic_launcher);
+        head.addView(icon, new LinearLayout.LayoutParams(dp(56), dp(56)));
         TextView title = text("BB Helper", 30, Color.WHITE, true);
-        col.addView(title);
+        title.setPadding(dp(14), 0, 0, 0);
+        head.addView(title);
+        col.addView(head);
         TextView sub = text(t("Ti mostra dove mettere i pezzi in Block Blast, direttamente sopra il gioco.",
                 "Shows you where to place the pieces in Block Blast, right on top of the game."), 16,
                 Color.rgb(170, 170, 190), false);
@@ -126,6 +140,31 @@ public class MainActivity extends Activity {
         });
         col.addView(op);
 
+        // lingua
+        TextView langLabel = text(t("Lingua", "Language"), 16, Color.WHITE, false);
+        langLabel.setPadding(0, dp(14), 0, dp(4));
+        col.addView(langLabel);
+        android.widget.RadioGroup langs = new android.widget.RadioGroup(this);
+        langs.setOrientation(LinearLayout.HORIZONTAL);
+        String[][] opts = {{"auto", t("Automatica", "Automatic")}, {"it", "Italiano"}, {"en", "English"}};
+        for (String[] o : opts) {
+            android.widget.RadioButton rb = new android.widget.RadioButton(this);
+            rb.setText(o[1]);
+            rb.setTextColor(Color.WHITE);
+            rb.setTextSize(15);
+            rb.setTag(o[0]);
+            rb.setId(View.generateViewId());
+            langs.addView(rb, new android.widget.RadioGroup.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+            if (o[0].equals(I18n.mode())) rb.setChecked(true);
+        }
+        langs.setOnCheckedChangeListener((g, id) -> {
+            String m = (String) g.findViewById(id).getTag();
+            if (m.equals(I18n.mode())) return;
+            Lang.set(this, m);
+            recreate(); // ridisegna la schermata nella nuova lingua
+        });
+        col.addView(langs);
+
         // ---- statistiche
         heading(t("Statistiche", "Statistics"));
         statsView = text("", 15, TEXT2, false);
@@ -165,9 +204,9 @@ public class MainActivity extends Activity {
         col.addView(diagView);
 
         // ---- guida
+        heading(t("Come funziona", "How it works"));
         TextView help = text(t(
-                "Come funziona\n\n"
-                        + "1. Tocca \"Avvia aiuto\" e consenti \"Mostra sopra altre app\" se richiesto.\n"
+                "1. Tocca \"Avvia aiuto\" e consenti \"Mostra sopra altre app\" se richiesto.\n"
                         + "2. Alla richiesta di registrazione dello schermo scegli \"Schermo intero\".\n"
                         + "3. Apri Block Blast: sopra la griglia compaiono i riquadri colorati.\n\n"
                         + "Il numero sopra un pezzo in basso indica quale prendere; i riquadri dello "
@@ -186,8 +225,7 @@ public class MainActivity extends Activity {
                         + "(tendina delle notifiche → matita/modifica).\n\n"
                         + "Privacy: l'app guarda lo schermo solo per riconoscere la partita. Le immagini "
                         + "non vengono salvate e nessun dato esce dal telefono.",
-                "How it works\n\n"
-                        + "1. Tap \"Start helper\" and allow \"Display over other apps\" if asked.\n"
+                "1. Tap \"Start helper\" and allow \"Display over other apps\" if asked.\n"
                         + "2. When asked to record the screen, choose \"Entire screen\".\n"
                         + "3. Open Block Blast: colored boxes appear on top of the board.\n\n"
                         + "The number above a piece at the bottom tells you which one to take; the boxes "
@@ -207,7 +245,6 @@ public class MainActivity extends Activity {
                         + "Privacy: the app looks at the screen only to recognize the game. Images are "
                         + "never saved and no data leaves your phone."), 15, TEXT2, false);
         help.setLineSpacing(0, 1.2f);
-        help.setPadding(0, dp(28), 0, 0);
         col.addView(help);
 
         ScrollView sv = new ScrollView(this);
@@ -231,9 +268,22 @@ public class MainActivity extends Activity {
         return tv;
     }
 
+    /** Inizia una nuova scheda con titolo: gli elementi successivi finiscono dentro di lei. */
     private TextView heading(String s) {
-        TextView h = text(s, 20, Color.WHITE, true);
-        h.setPadding(0, dp(28), 0, dp(8));
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setPadding(dp(18), dp(16), dp(18), dp(18));
+        GradientDrawable bg = new GradientDrawable();
+        bg.setColor(CARD);
+        bg.setCornerRadius(dp(20));
+        card.setBackground(bg);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.topMargin = dp(16);
+        root.addView(card, lp);
+        col = card;
+        TextView h = text(s, 19, Color.WHITE, true);
+        h.setPadding(0, 0, 0, dp(8));
         col.addView(h);
         return h;
     }
