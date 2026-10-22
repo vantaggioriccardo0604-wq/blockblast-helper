@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
  */
 public final class Updater {
 
-    public static final String REPO = "vantaggioriccardo0604-wq/blockblast-helper";
+    public static final String REPO = "riccdev06/bb-helper";
     public static final String REPO_URL = "https://github.com/" + REPO;
 
     public interface Listener {
