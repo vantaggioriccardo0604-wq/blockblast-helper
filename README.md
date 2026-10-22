@@ -6,7 +6,7 @@
 <i>Un aiuto per Block Blast su Android: ti mostra dove mettere i pezzi, direttamente sopra il gioco.</i> — <a href="#-italiano">🇮🇹 Italiano</a></p>
 
 <p align="center">
-  <a href="../../releases/latest"><img src="https://img.shields.io/github/v/release/vantaggioriccardo0604-wq/blockblast-helper?label=download&style=for-the-badge" alt="Latest release"></a>
+  <a href="../../releases/latest"><img src="https://img.shields.io/badge/download-latest%20APK-00c86e?style=for-the-badge&logo=android&logoColor=white" alt="Download the latest APK"></a>
   <a href="http://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/https://github.com/vantaggioriccardo0604-wq/blockblast-helper"><img src="https://img.shields.io/badge/Obtainium-auto--updates-7c4dff?style=for-the-badge" alt="Get it on Obtainium"></a>
   <img src="https://img.shields.io/badge/Android-8.0%2B-3ddc84?style=for-the-badge&logo=android&logoColor=white" alt="Android 8.0+">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=for-the-badge" alt="MIT"></a>
