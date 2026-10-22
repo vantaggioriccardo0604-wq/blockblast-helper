@@ -249,7 +249,7 @@ public class MainActivity extends Activity {
 
         ScrollView sv = new ScrollView(this);
         sv.setBackgroundColor(BG);
-        sv.addView(col);
+        sv.addView(root); // la pagina intera (col ora e' l'ultima scheda)
         setContentView(sv);
         getWindow().setStatusBarColor(BG);
         handleAutostart(getIntent());
