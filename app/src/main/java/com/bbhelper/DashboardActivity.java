@@ -97,7 +97,7 @@ public class DashboardActivity extends Activity {
 
         // ---- il gioco ti aiuta?
         LinearLayout c2 = card(tr("Il gioco ti aiuta?", "Does the game help you?"),
-                tr("Grandezza media dei pezzi (caselle) secondo quante caselle erano già piene", "Average piece size (cells) by how many cells were already filled"));
+                tr("Con la griglia piena il gioco dà pezzi che entrano più spesso del caso? Sotto: grandezza media dei pezzi secondo quante caselle erano piene", "With a full board, does the game give pieces that fit more often than chance? Below: average piece size by how many cells were filled"));
         boolean any = false;
         for (int n : data.fullnessCount) if (n > 0) any = true;
         if (!any) c2.addView(empty());

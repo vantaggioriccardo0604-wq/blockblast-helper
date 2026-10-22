@@ -127,9 +127,7 @@ public class MainActivity extends Activity {
         col.addView(op);
 
         // ---- statistiche
-        TextView statsTitle = heading(t("Statistiche", "Statistics"));
-        // comando nascosto: tieni premuto il titolo per esportare i dati raccolti
-        statsTitle.setOnLongClickListener(v -> { shareLog(); return true; });
+        heading(t("Statistiche", "Statistics"));
         statsView = text("", 15, TEXT2, false);
         statsView.setLineSpacing(0, 1.25f);
         col.addView(statsView);
@@ -296,27 +294,6 @@ public class MainActivity extends Activity {
             intent.removeExtra(EXTRA_AUTOSTART);
             start();
         }
-    }
-
-    private void shareLog() {
-        java.io.File f = new java.io.File(getFilesDir(), HelperService.LOG_FILE);
-        if (!f.exists() || f.length() == 0) {
-            Toast.makeText(this, t("Ancora nessun dato: gioca qualche partita con l'aiuto attivo",
-                    "No data yet: play a few games with the helper on"), Toast.LENGTH_LONG).show();
-            return;
-        }
-        StringBuilder sb = new StringBuilder("BB Helper data (time;board;piece1;piece2;piece3 | M;time;lines;followed | G;time | S;time;safety%)\n");
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(f))) {
-            String line;
-            while ((line = br.readLine()) != null) sb.append(line).append('\n');
-        } catch (Exception e) {
-            Toast.makeText(this, t("Errore nel leggere i dati", "Couldn't read the data"), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Intent send = new Intent(Intent.ACTION_SEND).setType("text/plain")
-                .putExtra(Intent.EXTRA_SUBJECT, "BB Helper data")
-                .putExtra(Intent.EXTRA_TEXT, sb.toString());
-        startActivity(Intent.createChooser(send, t("Condividi i dati", "Share data")));
     }
 
     @Override

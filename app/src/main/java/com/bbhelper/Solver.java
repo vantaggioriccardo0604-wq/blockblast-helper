@@ -376,6 +376,42 @@ public final class Solver {
         return Math.round(100f * ok / samples);
     }
 
+    /** I pezzi (chiavi tipo "##/#./") entrano tutti nella griglia, in qualche ordine? */
+    public static boolean fitsAll(long b, String[] keys) {
+        long[][] pl = new long[keys.length][];
+        for (int i = 0; i < keys.length; i++) pl[i] = placementsOf(keys[i]);
+        return fitsKeys(b, pl, 0);
+    }
+
+    private static final java.util.Map<String, long[]> PL_CACHE = new java.util.HashMap<>();
+
+    /** Tutte le posizioni di un pezzo dato come chiave (es. "##/#./"), con cache. */
+    public static synchronized long[] placementsOf(String key) {
+        long[] p = PL_CACHE.get(key);
+        if (p == null) {
+            p = allPlacements(parse(key.replaceAll("/+$", "")));
+            PL_CACHE.put(key, p);
+        }
+        return p;
+    }
+
+    private static boolean fitsKeys(long b, long[][] pl, int usedMask) {
+        if (usedMask == (1 << pl.length) - 1) return true;
+        for (int i = 0; i < pl.length; i++) {
+            if ((usedMask & (1 << i)) != 0) continue;
+            for (long m : pl[i]) {
+                if ((b & m) != 0) continue;
+                long nb = b | m, clear = 0;
+                for (int k = 0; k < 8; k++) {
+                    if ((nb & ROW[k]) == ROW[k]) clear |= ROW[k];
+                    if ((nb & COL[k]) == COL[k]) clear |= COL[k];
+                }
+                if (fitsKeys(nb & ~clear, pl, usedMask | (1 << i))) return true;
+            }
+        }
+        return false;
+    }
+
     private static boolean fitsAll(long b, int[] tri, int usedMask) {
         if (usedMask == 7) return true;
         for (int i = 0; i < 3; i++) {
