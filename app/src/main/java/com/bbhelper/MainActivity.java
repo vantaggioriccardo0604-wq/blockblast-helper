@@ -127,23 +127,14 @@ public class MainActivity extends Activity {
         col.addView(op);
 
         // ---- statistiche
-        heading(t("Statistiche", "Statistics"));
+        TextView statsTitle = heading(t("Statistiche", "Statistics"));
+        // comando nascosto: tieni premuto il titolo per esportare i dati raccolti
+        statsTitle.setOnLongClickListener(v -> { shareLog(); return true; });
         statsView = text("", 15, TEXT2, false);
         statsView.setLineSpacing(0, 1.25f);
         col.addView(statsView);
         Button dash = button(t("Apri dashboard 📊", "Open dashboard 📊"), Color.rgb(0, 160, 95), 52, 14);
         dash.setOnClickListener(v -> startActivity(new Intent(this, DashboardActivity.class)));
-        Button share = button(t("Condividi dati dei pezzi", "Share piece data"), BLUE, 52, 10);
-        share.setOnClickListener(v -> shareLog());
-        Button reset = button(t("Azzera statistiche", "Reset statistics"), GREY, 52, 10);
-        reset.setOnClickListener(v -> {
-            prefs.edit().putLong(HelperService.S_PLACED, 0).putLong(HelperService.S_LINES, 0)
-                    .putLong(HelperService.S_FOLLOWED, 0).putLong(HelperService.S_GAMES, 0)
-                    .putLong(HelperService.S_TRIPLES, 0)
-                    .putLong(HelperService.S_RESET, System.currentTimeMillis()).apply();
-            new java.io.File(getFilesDir(), HelperService.LOG_FILE).delete();
-            refresh();
-        });
 
         // ---- aggiornamenti e problemi
         heading(t("Aggiornamenti e problemi", "Updates and problems"));
@@ -242,10 +233,11 @@ public class MainActivity extends Activity {
         return tv;
     }
 
-    private void heading(String s) {
+    private TextView heading(String s) {
         TextView h = text(s, 20, Color.WHITE, true);
         h.setPadding(0, dp(28), 0, dp(8));
         col.addView(h);
+        return h;
     }
 
     /** Pulsante gia' aggiunto alla colonna. */

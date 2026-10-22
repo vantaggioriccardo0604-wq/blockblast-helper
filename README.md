@@ -44,7 +44,7 @@ Blue = looking for the board · orange = thinking · green = hint ready.
 
 - The app looks at the screen **only to recognize the game**. Each screenshot is analyzed in memory and discarded immediately; **images are never saved**.
 - **No data leaves your phone.** The app only connects to the internet when *you* tap "Update" (to check GitHub for a new version).
-- Only game statistics (pieces, moves, lines) are stored on the phone, and you can delete them from the app.
+- Only game statistics (pieces, moves, lines) are stored on the phone. You can delete them any time: Settings → Apps → BB Helper → Storage → Clear data.
 - In automatic mode the Accessibility service does **not** read text, passwords or content of other apps (`canRetrieveWindowContent="false"`); it only uses screenshots while the game is open.
 
 ## 🛠 How it works
@@ -92,6 +92,6 @@ In the app: **Updates and problems → "Report a problem on GitHub"** opens a pr
 
 **Bolla:** tocca = pausa · doppio tocco = punteggio/sopravvivenza · trascina = sposta · tieni premuto = chiudi.
 
-**Privacy:** le immagini dello schermo vengono analizzate sul momento e mai salvate; nessun dato esce dal telefono (internet solo quando tocchi "Aggiorna"); sul telefono restano solo le statistiche di gioco, che puoi cancellare.
+**Privacy:** le immagini dello schermo vengono analizzate sul momento e mai salvate; nessun dato esce dal telefono (internet solo quando tocchi "Aggiorna"); sul telefono restano solo le statistiche di gioco, che puoi cancellare da Impostazioni → App → BB Helper → Spazio → Cancella dati.
 
 **Problemi?** Nell'app: *Aggiornamenti e problemi → "Segnala un problema su GitHub"*, oppure [apri una segnalazione](../../issues/new/choose).

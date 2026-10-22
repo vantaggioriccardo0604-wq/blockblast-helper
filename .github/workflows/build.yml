@@ -29,24 +29,8 @@ jobs:
           javac -encoding UTF-8 -d build/tests app/src/main/java/com/bbhelper/{Analyzer,Solver,Tracker,Diag,DashData,I18n}.java tests/src/com/bbhelper/RunTests.java
           java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -cp build/tests com.bbhelper.RunTests tests
 
-      - name: Pulizia delle versioni precedenti alla pubblicazione (una volta sola)
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          # le versioni create prima della storia pubblica puntano a commit che non esistono piu'
-          gh release list --repo "${{ github.repository }}" --limit 1000 --json tagName,createdAt \
-            --jq '.[] | select(.createdAt < "2026-10-22T18:28:30Z") | .tagName' |
-          while read -r tag; do
-            echo "elimino $tag"
-            gh release delete "$tag" --repo "${{ github.repository }}" --cleanup-tag --yes || true
-          done
-
-      - name: Numero di versione (in sequenza, senza salti)
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          n=$(gh release list --repo "${{ github.repository }}" --limit 1000 | wc -l)
-          echo "APP_VERSION=1.1.$n" >> "$GITHUB_ENV"
+      - name: Numero di versione (dal file VERSION)
+        run: echo "APP_VERSION=$(tr -d '[:space:]' < VERSION)" >> "$GITHUB_ENV"
 
       - name: Compila l'APK
         run: |
@@ -91,7 +75,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           { echo "📲 Download **BlockBlastHelper.apk** below and open it on your phone · Scarica **BlockBlastHelper.apk** qui sotto e aprilo sul telefono."; echo; cat test_summary.md; } > notes.md
-          gh release create "r${{ github.run_number }}" BlockBlastHelper.apk \
+          # stessa versione = si sostituisce la release esistente (il numero cambia solo nel file VERSION)
+          gh release list --repo "${{ github.repository }}" --limit 1000 --json tagName,name \
+            --jq ".[] | select(.name == \"BB Helper ${APP_VERSION}\") | .tagName" |
+          while read -r tag; do gh release delete "$tag" --repo "${{ github.repository }}" --cleanup-tag --yes || true; done
+          gh release create "v${APP_VERSION}" BlockBlastHelper.apk \
             --title "BB Helper ${APP_VERSION}" \
             --notes-file notes.md \
             --latest

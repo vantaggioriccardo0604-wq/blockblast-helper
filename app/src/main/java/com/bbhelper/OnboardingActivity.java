@@ -34,15 +34,15 @@ public class OnboardingActivity extends Activity {
                     "Per riconoscere la partita, BB Helper deve guardare lo schermo mentre giochi.\n\n"
                             + "• Le immagini vengono analizzate sul momento e subito scartate: non vengono mai salvate.\n"
                             + "• Nessun dato esce dal telefono: l'app usa internet solo se tocchi tu \"Aggiorna\".\n"
-                            + "• Sul telefono restano solo le statistiche di gioco (pezzi, mosse, linee), che puoi "
-                            + "cancellare quando vuoi.\n"
+                            + "• Sul telefono restano solo le statistiche di gioco (pezzi, mosse, linee). Puoi "
+                            + "cancellarle quando vuoi da Impostazioni → App → BB Helper → Spazio → Cancella dati.\n"
                             + "• Con la modalità automatica (Accessibilità) l'app non legge testi, password o "
                             + "contenuti delle altre app: si attiva solo dentro il gioco.",
                     "To recognize the game, BB Helper has to look at the screen while you play.\n\n"
                             + "• Images are analyzed on the spot and thrown away right after: they are never saved.\n"
                             + "• No data leaves your phone: the app only uses the internet when you tap \"Update\".\n"
-                            + "• Only game statistics (pieces, moves, lines) stay on the phone, and you can delete "
-                            + "them any time.\n"
+                            + "• Only game statistics (pieces, moves, lines) stay on the phone. You can delete them "
+                            + "any time from Settings → Apps → BB Helper → Storage → Clear data.\n"
                             + "• In automatic mode (Accessibility) the app does not read texts, passwords or the content "
                             + "of other apps: it only turns on inside the game."},
             {"🚀", "Come iniziare", "Getting started",
